@@ -4,11 +4,14 @@ grammar SofaSkull
   end
   
   rule statement
-     io_mode <IOMode> / add_sub <AddSub> / run_sub <RunSub> / while_block <WhileBlock> / mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell>
+     io_mode <IOMode> / 
+     add_sub <AddSub> / run_sub <RunSub> / 
+     while_block <WhileBlock> / 
+     mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell>
   end
   
   rule io_mode
-    ":NUM:" / ":ASC:"
+    ':' ('NUM'/'ASC') ':'
   end
   
   rule while_block
