@@ -106,7 +106,7 @@ module SofaSkull
     end
  
     def []=(cell, value)
-      value = 0 if value < 0
+      value %= 256
       @cells[cell] = value
     end
  
