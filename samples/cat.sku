@@ -1,0 +1,6 @@
+:ASC:    // Enter ASCII-mode
+>0<      // Get the first char
+{0{      // Until EOF
+  <0>    // Prints out as a num
+  >0<    // Read a new char
+}}       // Closes loop

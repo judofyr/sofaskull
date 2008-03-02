@@ -1,0 +1,45 @@
+grammar SofaSkull
+  rule statements
+    statement*
+  end
+  
+  rule statement
+     io_mode <IOMode> / add_sub <AddSub> / run_sub <RunSub> / while_block <WhileBlock> / mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell>
+  end
+  
+  rule io_mode
+    ":NUM:" / ":ASC:"
+  end
+  
+  rule while_block
+    '{' cell:number '{' statements '}}'
+  end
+  
+  rule add_sub
+    '{' cell:number '(' statements ')}'
+  end
+  
+  rule run_sub
+    '!' cell:number '!'
+  end
+  
+  rule mod_cell
+    '{' cell:number '[' negopos value:number ']}'
+  end
+  
+  rule print_cell
+    ('|' cell:number '|') / ('<' cell:number '>')
+  end
+  
+  rule read_cell
+    '>' cell:number '<'
+  end
+  
+  rule negopos
+    ('+' / '-')?
+  end
+  
+  rule number
+    [0-9]+
+  end
+end
