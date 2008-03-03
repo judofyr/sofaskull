@@ -70,7 +70,7 @@ module SofaSkull
       @statements = parse(source)
       @cells = Hash.new{|hash,key|hash[key]=0}
       @subroutines = Hash.new{|hash,key|hash[key]=[]}
-      @io_mode = :num
+      @io_mode = :asc
       @stdin = $stdin
       @stdout = $stdout
     end
