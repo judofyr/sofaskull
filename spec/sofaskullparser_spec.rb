@@ -32,6 +32,13 @@ describe SofaSkullParser do
     end
   end
   
+  it "should accept condition running of subroutines" do
+    should_parse("!7?5!", CS) do |e|
+      e.cell.should == 5
+      e.sub.should == 7
+    end
+  end
+  
   it "should accept printing of cell" do
     should_parse("<6>", PC) do |e|
       e.cell.should == 6
