@@ -125,11 +125,11 @@ module SofaSkull
     # Cleans it up and parses the source. Returns a list of statements or raises SyntaxError. 
     def parse(source)
       return source if source.is_a?(Array)
-      SofaSkullParser.new.parse(clean(source)).elements rescue raise(SofaSkull::SyntaxError)
+      SofaSkullParser.new.parse(self.class.clean(source)).elements rescue raise(SofaSkull::SyntaxError)
     end
 
     # Removes comments and spaces
-    def clean(s)
+    def self.clean(s)
       s.gsub(/\/\/.*/,'').tr("\n\r\t\040",'')
     end
  
