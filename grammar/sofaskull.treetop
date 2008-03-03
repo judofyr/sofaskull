@@ -5,7 +5,7 @@ grammar SofaSkull
   
   rule statement
      io_mode <IOMode> / 
-     add_sub <AddSub> / run_sub <RunSub> / 
+     add_sub <AddSub> / run_sub <RunSub> / con_run_sub <ConRunSub> /
      while_block <WhileBlock> / 
      mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell>
   end
@@ -24,6 +24,10 @@ grammar SofaSkull
   
   rule run_sub
     '!' cell:number '!'
+  end
+  
+  rule con_run_sub
+    '!' sub:number '?' cell:number '!'
   end
   
   rule mod_cell

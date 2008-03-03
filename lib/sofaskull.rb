@@ -41,6 +41,14 @@ module SofaSkull
   module RunSub
     include Common
   end
+  
+  module ConRunSub
+    include Common
+    
+    def sub
+      super.text_value.to_i
+    end
+  end
 
   module ModCell
     include Common
@@ -93,6 +101,8 @@ module SofaSkull
         @subroutines[s.cell] = s.statements.elements
       when RunSub
         sub(@subroutines[s.cell])
+      when ConRunSub
+        sub(@subroutines[s.sub]) if self[s.cell].zero?
       end
       true
     end

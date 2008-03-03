@@ -10,6 +10,7 @@ end
 IM = SofaSkull::IOMode
 AS = SofaSkull::AddSub
 RS = SofaSkull::RunSub
+CS = SofaSkull::ConRunSub
 WB = SofaSkull::WhileBlock
 MC = SofaSkull::ModCell
 PC = SofaSkull::PrintCell
