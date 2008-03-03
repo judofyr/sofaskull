@@ -16,10 +16,11 @@ PC = SofaSkull::PrintCell
 RC = SofaSkull::ReadCell
 
 module SofaSkullHelpers  
-  def parse(string, *expected)
+  def should_parse(string, *expected)
     s = @parser.parse(string)
-    e = s.elements
     s.should_not == nil
+    return unless s
+    e = s.elements
     match_class(s, expected)
     yield e.length==1?e[0]:e if block_given?
     s
