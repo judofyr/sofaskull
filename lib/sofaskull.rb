@@ -90,13 +90,20 @@ module SofaSkull
       when IOMode
         @io_mode = s.to_sym
       when ModCell
-        mod_cell(s.cell, s.op, s.value)
+        self[s.cell] = s.op ? self[s.cell].send(s.op, s.value) : s.value
       when PrintCell
-        print_cell(s.cell)
+        o = self[s.cell]
+        o = o.chr if asc?
+        @stdout.print(o)
+        @stdout.flush
       when ReadCell
-        read_cell(s.cell)
+        o = @stdin.getc || EOF
+        o = o.chr.to_i unless asc?
+        self[s.cell] = o
       when WhileBlock
-        while_block(s.cell, s.statements.elements)
+        while self[s.cell] != 0
+          sub(s.statements.elements)
+        end
       when AddSub
         @subroutines[s.sub] = s.statements.elements
       when RunSub
@@ -144,33 +151,6 @@ module SofaSkull
     end
  
     private
- 
-    # Prints a cell
-    def print_cell(cell)
-      o = self[cell]
-      o = o.chr if asc?
-      @stdout.print(o)
-      @stdout.flush
-    end
- 
-    # Reads a cell
-    def read_cell(cell)
-      o = @stdin.getc || EOF
-      o = o.chr.to_i unless asc?
-      self[cell] = o
-    end
- 
-    # Modifies a cell
-    def mod_cell(cell, op, value)
-      self[cell] = op ? self[cell].send(op, value) : value
-    end
- 
-    # Runs a while block
-    def while_block(cell, code)
-      while self[cell] != 0
-        sub(code)
-      end
-    end
  
     def sub(code)
       p = self.class.new(code.dup)
