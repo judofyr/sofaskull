@@ -10,7 +10,7 @@ rescue
 end
 
 module SofaSkull
-  class SyntaxError < StandardError;def message()"There is a syntax error"end;end
+  class SyntaxError < StandardError;def message()"You have a syntax error"end;end
   
   module Common
     def cell
@@ -142,7 +142,11 @@ module SofaSkull
     # Cleans it up and parses the source. Returns a list of statements or raises SyntaxError. 
     def parse(source)
       return source if source.is_a?(Array)
-      SofaSkullParser.new.parse(self.class.clean(source)).elements rescue raise(SofaSkull::SyntaxError)
+      if i=SofaSkullParser.new.parse(self.class.clean(source))
+        i.elements
+      else
+        raise SofaSkull::SyntaxError
+      end
     end
 
     # Removes comments and spaces
