@@ -6,4 +6,8 @@ rescue LoadError
   require File.expand_path(File.dirname(__FILE__)+'/../lib/sofaskull')
 end
 
-SofaSkull::Program.new(File.read(ARGV[0])).run
+SofaSkull::Program.new(if i=ARGV[0]
+  File.read(i)
+else
+  $stdin.read
+end).run
