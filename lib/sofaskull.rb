@@ -16,6 +16,10 @@ module SofaSkull
     def cell
       super.text_value.to_i
     end
+    
+    def sub
+      super.text_value.to_i
+    end
 
     def ===(m)
       (m.is_a?(Module))?self.is_a?(m):super
@@ -44,10 +48,6 @@ module SofaSkull
   
   module ConRunSub
     include Common
-    
-    def sub
-      super.text_value.to_i
-    end
   end
 
   module ModCell
@@ -98,9 +98,9 @@ module SofaSkull
       when WhileBlock
         while_block(s.cell, s.statements.elements)
       when AddSub
-        @subroutines[s.cell] = s.statements.elements
+        @subroutines[s.sub] = s.statements.elements
       when RunSub
-        sub(@subroutines[s.cell])
+        sub(@subroutines[s.sub])
       when ConRunSub
         sub(@subroutines[s.sub]) if self[s.cell].zero?
       end

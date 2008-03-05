@@ -19,11 +19,11 @@ grammar SofaSkull
   end
   
   rule add_sub
-    '{' cell:number '(' statements ')}'
+    '{' sub:number '(' statements ')}'
   end
   
   rule run_sub
-    '!' cell:number '!'
+    '!' sub:number '!'
   end
   
   rule con_run_sub

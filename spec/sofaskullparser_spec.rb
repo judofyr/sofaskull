@@ -28,7 +28,7 @@ describe SofaSkullParser do
   
   it "should accept running of subroutines" do
     should_parse("!1!", RS) do |e|
-      e.cell.should == 1
+      e.sub.should == 1
     end
   end
   
@@ -44,7 +44,7 @@ describe SofaSkullParser do
       e.cell.should == 6
     end
     
-    should_parse("!8!") do |e|
+    should_parse("|8|") do |e|
       e.cell.should == 8
     end
   end
@@ -89,12 +89,12 @@ describe SofaSkullParser do
   
   it "should accept subroutines" do
     should_parse("{10()}", AS) do |e|
-      e.cell.should == 10
+      e.sub.should == 10
       e.statements.elements.should == []
     end
     
     should_parse("{2(:ASC:<0>)}", [AS, IM, PC]) do |e|
-      e.cell.should == 2
+      e.sub.should == 2
       e.statements.elements.length.should == 2
     end
   end
