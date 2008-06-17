@@ -1,0 +1,55 @@
+// HELPERS
+var getch = $loader.loadprim("std@sys_getch", 1);
+var sprintf = $loader.loadprim("std@sprintf", 2);
+var cells = $hnew(0);
+var subs = $hnew(0);
+
+var get_cell = function(key) {
+  val = $hget(cells, key, null);
+  if (val == null) {
+    return 0;
+  } else {
+    return val;
+  }
+}
+
+var set_cell = function(key, value, mod) {
+  if (mod) {
+    new = $iadd(get_cell(key), value) & 255;
+  } else {
+    new = value & 255;
+  }
+  $hset(cells, key, new, null);
+}
+
+var read_cell = function(key, mode) {
+  new = getch(false);
+  if (new == -1) {
+    new = 0;
+  }
+  if (mode == false) {
+    if (new < 57 && new > 48) {
+      new = 0;
+    } else {
+      new = new - 48;
+    }
+  }
+  set_cell(key, new, false);
+}
+
+var copy_cell = function(from, to) {
+  set_cell(to, get_cell(from), true)
+}
+
+var set_sub = function(key, value) {
+  $hset(subs, key, value, null);
+}
+
+var call_sub = function(key) {
+  func = $hget(subs, key, null);
+  if (func != null) {
+    func();
+  }
+}
+
+// USERCODE

@@ -4,7 +4,7 @@ require 'rubygems'
 require 'treetop'
 begin
   require 'sofaskullparser' 
-rescue
+rescue LoadError
   # For development
   Treetop.load(File.expand_path(File.dirname(__FILE__)+"/../grammar/sofaskull"))
 end
@@ -61,6 +61,14 @@ module SofaSkull
       negopos.text_value.to_sym unless negopos.text_value.empty?
     end
   end
+  
+  module CopyCell
+    include Common
+    
+    def to
+      super.text_value.to_i
+    end
+  end
 
   module PrintCell
     include Common
@@ -72,15 +80,19 @@ module SofaSkull
 
   class Program
     EOF = 0
-    attr_accessor :cells, :subroutines, :io_mode, :statements, :stdin, :stdout
+    attr_reader :result, :statements, :clean
+    attr_accessor :io_mode
  
-    def initialize(source)
+    def initialize(source, sub = false)
       @statements = parse(source)
-      @cells = Hash.new{|hash,key|hash[key]=0}
-      @subroutines = Hash.new{|hash,key|hash[key]=[]}
+      @sub = sub
       @io_mode = :asc
-      @stdin = $stdin
-      @stdout = $stdout
+      @result = String.new
+      header! unless sub
+    end
+
+    def header!
+      @result << File.read(File.join(File.dirname(__FILE__), "helpers.neko"))
     end
  
     def step
@@ -88,28 +100,25 @@ module SofaSkull
       return false if s.nil?
       case s
       when IOMode
-        @io_mode = s.to_sym
+        @io_mode = s.to_sym 
       when ModCell
-        self[s.cell] = s.op ? self[s.cell].send(s.op, s.value) : s.value
+        op = "-" if s.op == :-
+        mod = (!s.op.nil?).to_s
+        @result << "set_cell(#{s.cell}, #{op}#{s.value}, #{mod});"
+      when CopyCell
+        @result << "copy_cell(#{s.cell}, #{s.to});"
       when PrintCell
-        o = self[s.cell]
-        o = o.chr if asc?
-        @stdout.print(o)
-        @stdout.flush
+        @result << "$print(sprintf(#{ps}, get_cell(#{s.cell})));"
       when ReadCell
-        o = @stdin.getc || EOF
-        o = o.chr.to_i unless asc?
-        self[s.cell] = o
+        @result << "read_cell(#{s.cell}, #{io_mode == :asc});"
       when WhileBlock
-        while self[s.cell] != 0
-          sub(s.statements.elements)
-        end
+        @result << "while(get_cell(#{s.cell})!=0){#{sub(s.statements.elements)}}"
       when AddSub
-        @subroutines[s.sub] = s.statements.elements
+        @result << "set_sub(#{s.sub}, function(){#{sub(s.statements.elements)}});"
       when RunSub
-        sub(@subroutines[s.sub])
+        @result << "call_sub(#{s.sub});"
       when ConRunSub
-        sub(@subroutines[s.sub]) if self[s.cell].zero?
+        @result << "if(get_cell(#{s.cell})==0){call_sub(#{s.sub})}"
       end
       true
     end
@@ -117,32 +126,16 @@ module SofaSkull
     def run
       step until @statements.empty?
     end
- 
-    def [](cell)
-      @cells[cell]
+
+    def ps
+      @io_mode == :asc ? '"%c"' : '"%d"'
     end
  
-    def []=(cell, value)
-      value %= 256
-      @cells[cell] = value
-    end
- 
-    def asc?
-      @io_mode == :asc
-    end
-    
-    def data
-      [@cells, @subroutines, @io_mode, @stdin, @stdout]
-    end
-    
-    def data=(a)
-      @cells, @subroutines, @io_mode, @stdin, @stdout = *a
-    end
-    
     # Cleans it up and parses the source. Returns a list of statements or raises SyntaxError. 
     def parse(source)
       return source if source.is_a?(Array)
-      if i=SofaSkullParser.new.parse(self.class.clean(source))
+      @clean = self.class.clean(source)
+      if i=SofaSkullParser.new.parse(@clean)
         i.elements
       else
         raise SofaSkull::SyntaxError
@@ -151,16 +144,16 @@ module SofaSkull
 
     # Removes comments and spaces
     def self.clean(s)
-      s.gsub(/\/\/.*/,'').tr("\n\r\t\040",'')
+      s.gsub(/(\/\/|#).*/,'').tr("\n\r\t\040",'')
     end
  
     private
- 
+
     def sub(code)
-      p = self.class.new(code.dup)
-      p.data = *data
+      p = self.class.new(code.dup, true)
+      p.io_mode = io_mode
       p.run
-      data = p.data
+      p.result
     end
   end
 end
