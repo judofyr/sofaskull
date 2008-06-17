@@ -7,7 +7,8 @@ grammar SofaSkull
      io_mode <IOMode> / 
      add_sub <AddSub> / run_sub <RunSub> / con_run_sub <ConRunSub> /
      while_block <WhileBlock> / 
-     mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell>
+     mod_cell <ModCell> / print_cell <PrintCell> / read_cell <ReadCell> /
+     copy_cell <CopyCell>
   end
   
   rule io_mode
@@ -32,6 +33,10 @@ grammar SofaSkull
   
   rule mod_cell
     '{' cell:number '[' negopos value:number ']}'
+  end
+  
+  rule copy_cell
+    '{' cell:number '->' to:number '}'
   end
   
   rule print_cell
