@@ -1,5 +1,5 @@
 ///////////// VARIABLES
-{0[20]}    // How many numbers we want
+{0[10]}    // How many numbers we want
 ///////////// CONSTANTS
 {1[1]}     // Small temp
 {2[1]}     // Large temp
@@ -10,19 +10,11 @@
 :ASC:<4>   // Print of a space
 {0[-1]}
 {0{
-  {1{       // Moves 1 to 3
-    {1[-1]}
-    {3[+1]}
-  }}
-  {2{       // Moves 2 to 1, adds 2 to 3
-    {1[+1]}
-    {2[-1]}
-    {3[+1]}
-  }}
-  {3{       // Adds 3 to 2
-    {3[-1]}
-    {2[+1]}
-  }}
+  {1->3}
+  {1[0]}
+  {2->1}
+  {3->2}
+  {3[0]}
   :NUM:<1>       // Print out the number
   :ASC:<4>       // Print out a space
   {0[-1]}
