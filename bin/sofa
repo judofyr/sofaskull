@@ -1,10 +1,7 @@
-#!/usr/bin/ruby
+#!/usr/bin/ruby 
+$:.unshift File.dirname(__FILE__) + '/../lib'
 require 'rubygems'
-begin
-  require 'sofaskull'
-rescue LoadError
-  require File.expand_path(File.dirname(__FILE__)+'/../lib/sofaskull')
-end
+require 'sofaskull'
 
 input = if ARGV[0]
   File.read(ARGV[0])
