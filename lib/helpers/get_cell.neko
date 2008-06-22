@@ -1,0 +1,8 @@
+var get_cell = function(key) {
+  val = $hget(cells, key, null);
+  if (val == null) {
+    return 0;
+  } else {
+    return val;
+  }
+}

@@ -1,0 +1,6 @@
+var call_sub = function(key) {
+  func = $hget(subs, key, null);
+  if (func != null) {
+    func();
+  }
+}

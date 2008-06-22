@@ -1,0 +1,8 @@
+var set_cell = function(key, value, mod) {
+  if (mod) {
+    new = $iadd(get_cell(key), value) & 255;
+  } else {
+    new = value & 255;
+  }
+  $hset(cells, key, new, null);
+}

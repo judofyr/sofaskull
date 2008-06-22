@@ -1,0 +1,3 @@
+var set_sub = function(key, value) {
+  $hset(subs, key, value, null);
+}                                        

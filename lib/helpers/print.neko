@@ -1,0 +1,1 @@
+var sprintf = $loader.loadprim("std@sprintf", 2);

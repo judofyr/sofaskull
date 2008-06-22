@@ -1,0 +1,16 @@
+var getch = $loader.loadprim("std@sys_getch", 1);
+
+var read_cell = function(key, mode) {
+  new = getch(false);
+  if (new == -1) {
+    new = 0;
+  }
+  if (mode == false) {
+    if (new < 57 && new > 48) {
+      new = 0;
+    } else {
+      new = new - 48;
+    }
+  }
+  set_cell(key, new, false);
+}

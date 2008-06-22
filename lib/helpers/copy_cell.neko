@@ -1,0 +1,3 @@
+var copy_cell = function(from, to) {
+  set_cell(to, get_cell(from), true)
+}
